@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>🎁 MỞ QUÀ TRÚNG CHÉN | v1.1.1.8</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bg-decor" aria-hidden="true">
+      <span class="lantern"></span>
+      <span class="lantern"></span>
+      <span class="lantern"></span>
+      <span class="lantern"></span>
+      <span class="lantern"></span>
+      <span class="lantern"></span>
+    </div>
+    <div class="card">
+      <h1>🎁 MỞ QUÀ ĐẦU NĂM</h1>
+      <div class="subtitle">Chúc mở ra may mắn – say là ngủ 🍶</div>
+
+      <div class="name-field">
+        <input
+          id="playerName"
+          type="text"
+          maxlength="24"
+          placeholder="Nhập tên rồi bấm Thêm..."
+          autocomplete="nickname"
+        />
+        <button class="name-add" onclick="addPlayer()">THÊM</button>
+      </div>
+      <div class="name-list" id="nameList"></div>
+      <div class="name-hint">
+        Mẹo: nhập nhiều tên, bấm MỞ QUÀ để chọn ngẫu nhiên.
+      </div>
+
+      <div class="gift" onclick="openGift()">🎁</div>
+      <button onclick="openGift()">MỞ QUÀ NGAY</button>
+
+      <div class="footer">
+        © 2026 – Phiên bản 1.1.1.8<br />
+        Nhà phát triển: <b>LÒ VĂN VIỆT</b>
+      </div>
+    </div>
+
+    <!-- POPUP -->
+    <div class="popup" id="popup">
+      <div class="popup-box">
+        <h2>🎉 MỞ QUÀ THÀNH CÔNG</h2>
+        <div class="taunt" id="tauntText"></div>
+        <div class="cup" id="cupText"></div>
+        <button class="skip-btn" id="skipBtn" onclick="trySkip()">
+          BỎ QUA?
+        </button>
+        <div class="timer" id="timerText"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
