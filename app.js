@@ -38,6 +38,16 @@ function startBgm() {
   }
 }
 
+// Auto unmute and play when page loads
+window.addEventListener("load", () => {
+  if (bgm) {
+    bgm.muted = false;
+    bgm.play().catch(() => {
+      // Play failed, will play on user interaction
+    });
+  }
+});
+
 document.addEventListener("pointerdown", startBgm, { once: true });
 document.addEventListener("keydown", startBgm, { once: true });
 
@@ -264,6 +274,3 @@ function sparkleBurst() {
     setTimeout(() => s.remove(), 1000);
   }
 }
-
-
-
