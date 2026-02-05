@@ -24,6 +24,22 @@ const timerText = document.getElementById("timerText");
 const skipBtn = document.getElementById("skipBtn");
 const playerNameInput = document.getElementById("playerName");
 const nameListEl = document.getElementById("nameList");
+const bgm = document.getElementById("bgm");
+
+let bgmStarted = false;
+function startBgm() {
+  if (!bgm || bgmStarted) return;
+  bgmStarted = true;
+  const maybePromise = bgm.play();
+  if (maybePromise && typeof maybePromise.catch === "function") {
+    maybePromise.catch(() => {
+      bgmStarted = false;
+    });
+  }
+}
+
+document.addEventListener("pointerdown", startBgm, { once: true });
+document.addEventListener("keydown", startBgm, { once: true });
 
 /* ===== CHỐNG LỆCH LUẬT – BIẾN NHỚ LƯỢT ===== */
 let lastResult = null;
@@ -115,6 +131,7 @@ function setStatus(isDrink) {
 }
 
 function openGift() {
+  startBgm();
   let result, cup, drinker;
   skipUsed = false;
 
