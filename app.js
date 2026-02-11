@@ -240,7 +240,7 @@ function trySkip() {
     return;
   }
 
-  const trapTotal = currentBaseCup * currentMultiplier * 2;
+  const trapTotal = currentBaseCup * currentMultiplier * 1;
   tauntText.innerHTML = `
     ⚠️ XẬP BẪY!
     <div class="drink-who emph">${currentDrinker}</div>
