@@ -8,6 +8,11 @@ const drinkers = [
   "👉 Người bên phải uống!",
   "🧑‍🤝‍🧑 Người đối diện uống!",
   "🍻 Cả bàn cùng uống!",
+  "🔥 Không trốn được, uống thôi!",
+  "💥 Ai né được chén này? Không ai!",
+  "😈 Uống đi, đừng ngại!",
+  "👊 Đã rót là phải uống!",
+  "🍺 Uống tẹt không lùi!",
 ];
 
 const passTexts = [
@@ -15,6 +20,19 @@ const passTexts = [
   "😏 Né được chén này!",
   "🤣 Nhân phẩm cao!",
   "🧧 Lộc né rượu!",
+  "🙈 Trót may mắn lần này thôi nhé!",
+  "😅 Qua được rồi nhưng đừng quá tự tin!",
+  "😜 Cầu may thôi chứ lần sau chưa chắc!",
+];
+
+// Thêm nhiều câu cà khịa khi phải uống
+const drinkTaunts = [
+  "🍻 Không có chỗ trốn, uống thôi!",
+  "😤 Uống đi cho máu!",
+  "🥴 Hết hàng rào, nhận chén đi!",
+  "😏 Thích né thì né lần sau!",
+  "🎯 Trúng ngay: uống gấp!",
+  "🫠 Không xin được khoan nhượng đâu!",
 ];
 
 const popup = document.getElementById("popup");
@@ -55,9 +73,11 @@ document.addEventListener("keydown", startBgm, { once: true });
 let lastResult = null;
 let lastCup = null;
 let lastDrinker = null;
+// (Không sử dụng biến đếm nữa — mọi thứ sẽ ngẫu nhiên và công bằng)
 
-/* ===== HÊN LẮM RA 2: TỈ LỆ 2/30 ===== */
-const luckyRate = 2 / 30;
+/* ===== HÊN LẮM RA 2: GIẢM TẦN SUẤT ===== */
+// Giảm tần suất ngẫu nhiên ra 2 chén để vui hơn
+const luckyRate = 1 / 60;
 
 /* ===== TRẠNG THÁI LƯỢT HIỆN TẠI ===== */
 let currentBaseCup = 0;
@@ -146,6 +166,7 @@ function openGift() {
   skipUsed = false;
 
   /* CHỐNG QUA LƯỢT LIÊN TIẾP */
+  // Mọi kết quả giờ hoàn toàn ngẫu nhiên — chỉ dùng rollResult()
   do {
     result = rollResult();
   } while (result === "pass" && lastResult === "pass");
@@ -199,6 +220,11 @@ function openGift() {
     cupText.textContent = `🍶 ${totalCup} CHÉN`;
     setSkipVisible(true);
 
+    // Hiển thị badge/hình nhỏ khi ra uống
+    if (typeof showDrinkBadge === "function") {
+      showDrinkBadge(`${totalCup} CHÉN`);
+    }
+
     lastResult = "drink";
     lastCup = currentBaseCup;
     lastDrinker = drinker;
@@ -240,15 +266,22 @@ function trySkip() {
     return;
   }
 
-  const trapTotal = currentBaseCup * currentMultiplier * 1;
-  tauntText.innerHTML = `
-    ⚠️ XẬP BẪY!
-    <div class="drink-who emph">${currentDrinker}</div>
-    💥 X2 CHÉN!
-  `;
+  // Bẫy: cộng +1 chén vào tổng (ví dụ 2 -> 3), và cà khịa mạnh hơn
+  const trapTotal = currentBaseCup * currentMultiplier + 1;
+  const trapTaunts = [
+    "⚠️ XẬP BẪY! Không trốn được!",
+    "😈 Đã cố né, giờ thêm chén cho vui!",
+    "💥 Cà khịa: Uống thêm chén nữa đi!",
+    "🔥 Bắt buộc cộng 1 chén!",
+  ];
+  const ta = trapTaunts[Math.floor(Math.random() * trapTaunts.length)];
+  tauntText.innerHTML = `\n    ${ta}\n    <div class="drink-who emph">${currentDrinker}</div>\n    💥 ${trapTotal} CHÉN!\n  `;
   cupText.textContent = `🍶 ${trapTotal} CHÉN (BẪY)`;
   skipBtn.disabled = true;
   skipBtn.textContent = "ĐÃ XẬP BẪY";
+  // Hiển thị badge khi bị bẫy
+  if (typeof showDrinkBadge === "function")
+    showDrinkBadge(`${trapTotal} CHÉN (BẪY)`);
 }
 
 function paperRain() {
@@ -273,4 +306,36 @@ function sparkleBurst() {
     document.body.appendChild(s);
     setTimeout(() => s.remove(), 1000);
   }
+}
+
+// Hiển thị một badge/hình nhỏ khi ra uống (tạm dùng div với style inline)
+function showDrinkBadge(text) {
+  const b = document.createElement("div");
+  b.className = "drink-badge";
+  b.textContent = text;
+  // Styles cơ bản để hiển thị đẹp trên mọi project nhỏ
+  b.style.position = "fixed";
+  b.style.left = "50%";
+  b.style.top = "30%";
+  b.style.transform = "translateX(-50%)";
+  b.style.background = "rgba(0,0,0,0.75)";
+  b.style.color = "#fff";
+  b.style.padding = "10px 18px";
+  b.style.borderRadius = "999px";
+  b.style.fontSize = "18px";
+  b.style.zIndex = 9999;
+  b.style.boxShadow = "0 6px 18px rgba(0,0,0,0.4)";
+  b.style.opacity = "0";
+  b.style.transition = "opacity 200ms, transform 400ms";
+  document.body.appendChild(b);
+  // animate in
+  requestAnimationFrame(() => {
+    b.style.opacity = "1";
+    b.style.transform = "translateX(-50%) translateY(-6px)";
+  });
+  setTimeout(() => {
+    b.style.opacity = "0";
+    b.style.transform = "translateX(-50%) translateY(-20px)";
+    setTimeout(() => b.remove(), 400);
+  }, 1400);
 }
